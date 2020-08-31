@@ -32,7 +32,6 @@
         <extension module="org.wildfly.extension.request-controller"/>
         <extension module="org.wildfly.extension.security.manager"/>
         <extension module="org.wildfly.extension.undertow"/>
-        <!-- ##KEYCLOAK_EXTENSION## -->
     </extensions>
     <management>
         <security-realms>
@@ -53,7 +52,6 @@
                 <authorization>
                     <properties path="application-roles.properties" relative-to="jboss.server.config.dir"/>
                 </authorization>
-                <!-- No SSL configuration discovered -->
             </security-realm>
         </security-realms>
         <audit-log>
@@ -70,7 +68,7 @@
             </logger>
         </audit-log>
         <management-interfaces>
-            <http-interface http-upgrade-enabled="true" console-enabled="false"><!-- ##MGMT_IFACE_REALM## -->
+            <http-interface http-upgrade-enabled="true" console-enabled="false">
                 <socket-binding http="management-http"/>
             </http-interface>
         </management-interfaces>
@@ -123,7 +121,6 @@
             <job-repository name="in-memory">
                 <in-memory/>
             </job-repository>
-            <!-- ##JOB_REPOSITORY## -->
             <thread-pool name="batch">
                 <max-threads count="10"/>
                 <keepalive-time time="30" unit="seconds"/>
@@ -153,7 +150,6 @@
                     <driver name="postgresql" module="org.postgresql">
                         <xa-datasource-class>org.postgresql.xa.PGXADataSource</xa-datasource-class>
                     </driver>
-                    <!-- ##DRIVERS## -->
                 </drivers>
             </datasources>
         </subsystem>
@@ -177,8 +173,6 @@
                 </managed-scheduled-executor-services>
             </concurrent>
             <default-bindings context-service="java:jboss/ee/concurrency/context/default"
-                           <!--    datasource="java:jboss/datasources/ProductDS"-->
-                           <!--    jms-connection-factory="java:jboss/DefaultJMSConnectionFactory"-->
                               managed-executor-service="java:jboss/ee/concurrency/executor/default"
                               managed-scheduled-executor-service="java:jboss/ee/concurrency/scheduler/default"
                               managed-thread-factory="java:jboss/ee/concurrency/factory/default"/>
@@ -197,7 +191,6 @@
             </mdb>
             <pools>
                 <bean-instance-pools>
-                    <!-- Automatically configure pools. Alternatively, max-pool-size can be set to a specific value -->
                     <strict-max-pool name="slsb-strict-max-pool" derive-size="from-worker-pools" instance-acquisition-timeout="5" instance-acquisition-timeout-unit="MINUTES"/>
                     <strict-max-pool name="mdb-strict-max-pool" derive-size="from-cpu-count" instance-acquisition-timeout="5" instance-acquisition-timeout-unit="MINUTES"/>
                 </bean-instance-pools>
@@ -211,7 +204,11 @@
             </passivation-stores>
             <async thread-pool-name="default"/>
             <remote connector-ref="http-remoting-connector" thread-pool-name="default"/>
-                        <timer-service thread-pool-name="default" default-data-store="default-file-store">                <data-stores>                    <file-data-store name="default-file-store" path="timer-service-data" relative-to="jboss.server.data.dir"/>                    <!-- ##DATASTORES## -->                </data-stores>            </timer-service>
+            <timer-service thread-pool-name="default" default-data-store="default-file-store">                
+				<data-stores>                    
+					<file-data-store name="default-file-store" path="timer-service-data" relative-to="jboss.server.data.dir"/>                   
+				</data-stores>            
+			</timer-service>
             <thread-pools>
                 <thread-pool name="default">
                     <max-threads count="10"/>
@@ -311,7 +308,6 @@
                     <protocol type="pbcast.NAKACK2"/>
                     <protocol type="UNICAST3"/>
                     <protocol type="pbcast.STABLE"/>
-                    <!--WARNING: No password defined for JGroups cluster. AUTH protocol has been disabled. Please define JGROUPS_CLUSTER_PASSWORD. -->
                     <protocol type="pbcast.GMS"/>
                     <protocol type="UFC"/>
                     <protocol type="MFC"/>
@@ -328,7 +324,6 @@
                     <protocol type="pbcast.NAKACK2"/>
                     <protocol type="UNICAST3"/>
                     <protocol type="pbcast.STABLE"/>
-                    <!--WARNING: No password defined for JGroups cluster. AUTH protocol has been disabled. Please define JGROUPS_CLUSTER_PASSWORD. -->
                     <protocol type="pbcast.GMS"/>
                     <protocol type="MFC"/>
                     <protocol type="FRAG2"/>
@@ -344,15 +339,13 @@
             <jpa default-datasource="" default-extended-persistence-inheritance="DEEP"/>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:jsf:1.0"/>
-        <!-- ##KEYCLOAK_SUBSYSTEM## -->
-        <!-- ##KEYCLOAK_SAML_SUBSYSTEM## -->
+
         <subsystem xmlns="urn:jboss:domain:mail:2.0">
             <mail-session name="default" jndi-name="java:jboss/mail/Default">
                 <smtp-server outbound-socket-binding-ref="mail-smtp"/>
             </mail-session>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:messaging-activemq:1.0">
-             <!-- ##MESSAGING_SUBSYSTEM_CONFIG## -->
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:modcluster:2.0">
             <mod-cluster-config advertise-socket="modcluster" connector="ajp">
@@ -371,7 +364,6 @@
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:resource-adapters:4.0">
             <resource-adapters>
-                <!-- ##RESOURCE_ADAPTERS## -->
             </resource-adapters>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:request-controller:1.0"/>
@@ -393,7 +385,7 @@
                         <login-module code="RealmDirect" flag="required">
                             <module-option name="password-stacking" value="useFirstPass"/>
                         </login-module>
-                        <!-- ##OTHER_LOGIN_MODULES## -->
+   
                     </authentication>
                 </security-domain>
                 <security-domain name="jboss-web-policy" cache-type="default">
@@ -406,8 +398,6 @@
                         <policy-module code="Delegating" flag="required"/>
                     </authorization>
                 </security-domain>
-                <!-- ##KEYCLOAK_SECURITY_DOMAIN## -->
-                <!-- no additional security domains configured --><!-- ##ADDITIONAL_SECURITY_DOMAINS## -->
             </security-domains>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:singleton:1.0">
@@ -424,14 +414,12 @@
                 </process-id>
             </core-environment>
             <recovery-environment socket-binding="txn-recovery-environment" status-socket-binding="txn-status-manager"/>
-            <!-- ##JDBC_STORE## -->
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:undertow:3.1">
             <buffer-cache name="default"/>
             <server name="default-server">
                 <ajp-listener name="ajp" socket-binding="ajp"/>
                 <http-listener name="default" socket-binding="http" redirect-socket="https"/>
-                <!-- No HTTPS configuration discovered -->
                 <host name="default-host" alias="localhost">
                     <location name="/" handler="welcome-content"/>
                     <filter-ref name="server-header"/>
