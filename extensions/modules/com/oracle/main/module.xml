@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
- !
- ! @author  Hugo Navarro, hugo.navarro@mh.gob.sv
- ! @date 	08/10/2014 04:00:00 pm. 
- !
--->
-<module xmlns="urn:jboss:module:1.1" name="com.oracle.ojdbc7">
+<module xmlns="urn:jboss:module:1.1" name="com.oracle">
     <resources>
         <resource-root path="ojdbc7-12.1.0.2.jar"/>
     </resources>
